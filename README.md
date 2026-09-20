@@ -78,5 +78,3 @@ To scale this agent for a production enterprise environment, I would implement t
 * **Observability and Tracing:** Integrate AWS OpenTelemetry with Amazon CloudWatch and Bedrock tracing to capture latency metrics, tool invocation success rates, token utilization, and end-to-end user session paths.
 * **Granular Session and State Management:** Transition the ephemeral memory storage into Amazon DynamoDB with fine-grained TTL policies, coupling it with AgentCore Memory semantic strategies to isolate sensitive tenant data across enterprise accounts.
 * **Safety Guardrails:** Implement Amazon Bedrock Guardrails to enforce PII masking (redacting credit cards and addresses), block prompt injection attacks, and restrict customer support outputs strictly to validated corporate policies before dispatching them to end users.
-
-```
