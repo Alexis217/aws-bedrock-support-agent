@@ -34,6 +34,7 @@ The agent leverages a serverless BYOC (Bring Your Own Code) runtime deployed via
 │   └── Test_4_Long-Term_Memory_Session_B.png
 ├── Loyalty_Discount_Calculation/
 │   ├── prompt.txt
+│   ├── Loyalty_Discount_Calculation_update_response.png
 │   └── Test_5_Loyalty_Discount_Calculation.png
 ├── Order_Tracking/
 │   ├── prompt.txt
@@ -56,7 +57,7 @@ The agent leverages a serverless BYOC (Bring Your Own Code) runtime deployed via
 | **Test 2 — Refund Processing** | Initiates item refund and confirms SLA via MCP gateway. | `Refund_Processing/Test_2_Refund_Processing.png` |
 | **Test 3 — Knowledge Base (RAG)** | Fetches tier perks from Bedrock Knowledge Base. | `Knowledge_Base/Test_3_Knowledge_Base_(RAG).png` |
 | **Test 4 — Long-Term Memory** | Persists customer preferences across independent sessions. | `Long-Term_Memory/` (Session A & B) |
-| **Test 5 — Discount Calculation** | Executes accurate arithmetic using AgentCore Code Interpreter. | `Loyalty_Discount_Calculation/Test_5_Loyalty_Discount_Calculation.png` |
+| **Test 5 — Discount Calculation** | Executes accurate arithmetic using AgentCore Code Interpreter. | `Loyalty_Discount_Calculation/Loyalty_Discount_Calculation_update_response.png` |
 | **Test 6 — Browser Tool** | Navigates to a remote web page to retrieve document metadata. | `Browser_Tool/Test_6_Browser_Tool.png` |
 
 ---

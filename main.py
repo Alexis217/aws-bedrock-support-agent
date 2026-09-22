@@ -64,10 +64,10 @@ os.environ["BYPASS_TOOL_CONSENT"] = "true"
 # REGION:     your AWS region, e.g. "us-east-1"
 # MEMORY_ID   format: shown in the AgentCore Memory console
 
-GATEWAY_URL = "https://customersupportgateway-b8oh2vvnzd.gateway.bedrock-agentcore.us-east-1.amazonaws.com/mcp"   # TODO: Replace with your Gateway URL
-KB_ID       = "VZZ1NHEAEP"          # TODO: Replace with your Knowledge Base ID
+GATEWAY_URL = "https://customersupportgateway-efeymnqvy4.gateway.bedrock-agentcore.us-east-1.amazonaws.com/mcp"   # TODO: Replace with your Gateway URL
+KB_ID       = "YZQJGPIZDM"          # TODO: Replace with your Knowledge Base ID
 REGION      = "us-east-1"        # TODO: Replace with your AWS region
-MEMORY_ID   = "CustomerSupportMemory-G7urDx6WBC"        # TODO: Replace with your Memory ID
+MEMORY_ID   = "CustomerSupportMemory-l87NcB9Mpa"        # TODO: Replace with your Memory ID
 
 
 # ── TODO 3 — Model and Clients ────────────────────────────────────────────────
@@ -378,6 +378,7 @@ result = {{
     "points_redeemed": points_redeemed,
     "points_discount": points_discount,
     "tier": tier,
+    "tier_discount_pct": tier_rate,
     "tier_discount": tier_discount,
     "final_total": final_total,
     "total_savings": total_savings,
@@ -415,10 +416,14 @@ print(json.dumps(result))
 
         fallback_result = {
             "order_total": order_total,
+            "points_redeemed": 0,
+            "points_discount": 0.0,
             "tier": tier,
+            "tier_discount_pct": tier_rate,
             "tier_discount": tier_discount,
             "final_total": final_total,
             "total_savings": tier_discount,
+            "remaining_points": loyalty_points,
             "fallback": True,
             "error": str(e),
         }
@@ -473,18 +478,19 @@ async def invoke(payload, context=None):
             agent_core_browser.browser,
         ]
 
-        if GATEWAY_URL and "<alias>" not in GATEWAY_URL:
-            mcp_client = MCPClient(lambda: streamable_http_client(GATEWAY_URL))
-            tools.append(mcp_client)
-
         system_prompt = (
             "You are an empathetic, efficient Amazon Customer Support assistant. "
             "Use tools to look up order details, process refunds, retrieve product catalog info, "
-            "and calculate loyalty discounts accurately. Always be concise and helpful."
+            "and calculate loyalty discounts accurately. Always be concise and helpful.\n\n"
             "CRITICAL RULE FOR BROWSER TOOL:\n"
             "When initializing a browser session, the 'session_name' MUST strictly match '^[a-z0-9-]+$'. "
             "Never use underscores or special characters. Use only lowercase letters and hyphens (e.g., 'session-1', 'web-search')."
         )
+
+        if GATEWAY_URL and "<alias>" not in GATEWAY_URL:
+            mcp_client = MCPClient(lambda: streamable_http_client(GATEWAY_URL))
+            gateway_tools = await mcp_client.load_tools()
+            tools.extend(gateway_tools)
 
         agent = Agent(
             model=model,
@@ -494,7 +500,6 @@ async def invoke(payload, context=None):
         )
 
         response = await agent.invoke_async(user_input)
-
 
         if hasattr(response, "messages") and response.messages:
             last_message = response.messages[-1]
